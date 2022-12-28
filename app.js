@@ -1,5 +1,5 @@
 /*
-  
+  app.js
  */
 
 // =====================================================
@@ -12,6 +12,9 @@ require('express-async-errors')
 const morgan = require('morgan')
 const express = require('express')
 const cookieParser = require('cookie-parser')
+
+// (1)
+const fileUpload = require('express-fileupload')
 
 const app = express()
 
@@ -32,6 +35,9 @@ const errorHandlerMiddleware = require('./middleware/error-handler')
 app.use(cookieParser(process.env.JWT_SECRET))
 app.use(morgan('tiny'))
 app.use(express.json())
+
+// (2) productController
+app.use(fileUpload())
 
 app.get('/', (req, res) => {
   res.send(`
