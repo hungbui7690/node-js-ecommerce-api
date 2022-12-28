@@ -20,7 +20,6 @@ router
 
 router.route('/showMe').get(authenticateUser, showCurrentUser)
 
-// (1) userController
 router.route('/updateUser').patch(authenticateUser, updateUser)
 
 router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword)

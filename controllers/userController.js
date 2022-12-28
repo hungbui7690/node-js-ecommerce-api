@@ -26,7 +26,7 @@ const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: req.user })
 }
 
-// (2)
+// (2)  use findOne() + save() to trigger pre-save
 const updateUser = async (req, res) => {
   const { email, name } = req.body
 
@@ -34,14 +34,20 @@ const updateUser = async (req, res) => {
     throw new CustomAPIError.BadRequestError('Please provide all values')
   }
 
-  const user = await User.findOneAndUpdate(
-    { _id: req.user.userID },
-    { email, name },
-    { new: true, runValidators: true }
-  )
+  // (a)
+  const user = await User.findOne({ _id: req.user.userID })
+
+  if (!user)
+    throw new CustomAPIError.UnauthenticatedError('Invalid Credentials')
+
+  // (b)
+  user.email = email
+  user.name = name
+
+  // (c)
+  await user.save()
 
   const tokenUser = createTokenUser(user)
-
   attachCookiesToResponse({ res, tokenUser })
 
   res.status(StatusCodes.OK).json({ user: tokenUser })
