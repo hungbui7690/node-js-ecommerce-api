@@ -3,15 +3,19 @@ const { StatusCodes } = require('http-status-codes')
 const CustomAPIError = require('../errors/')
 const path = require('path')
 
+// (3)
 const getAllProducts = async (req, res) => {
-  const products = await Product.find({}).sort('createdAt _id')
+  const products = await Product.find({})
+    .sort('createdAt _id')
+    .populate('review')
   res.status(StatusCodes.OK).json({ products })
 }
 
+// (4) end
 const getSingleProduct = async (req, res) => {
   const { id } = req.params
 
-  const product = await Product.findOne({ _id: id })
+  const product = await Product.findOne({ _id: id }).populate('review')
 
   if (!product)
     throw new CustomAPIError.NotFoundError(`No product with id ${id}`)

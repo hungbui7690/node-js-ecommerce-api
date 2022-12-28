@@ -27,7 +27,6 @@ const createReview = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ review })
 }
 
-// here
 const GetAllReviews = async (req, res) => {
   const reviews = await Review.find({})
     .populate({

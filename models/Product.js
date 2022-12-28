@@ -57,7 +57,18 @@ const ProductSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+
+  // (1)
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 )
+
+// (2) productController
+ProductSchema.virtual('review', {
+  ref: 'Review',
+  localField: '_id', // this is what id looks like in Product
+  foreignField: 'product', // in review
+  justOne: false, // since we want to get the list
+  match: { rating: 5 }, // filter
+})
 
 module.exports = mongoose.model('Product', ProductSchema)
