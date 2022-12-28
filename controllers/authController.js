@@ -1,7 +1,7 @@
 const User = require('../models/User')
 const CustomAPIError = require('../errors/')
 const { StatusCodes } = require('http-status-codes')
-const { attachCookiesToResponse } = require('../utils/')
+const { attachCookiesToResponse, createTokenUser } = require('../utils/')
 
 const register = async (req, res) => {
   const { name, email, password } = req.body
@@ -22,7 +22,7 @@ const register = async (req, res) => {
   const user = await User.create({ ...req.body, role })
   if (!user) throw new CustomAPIError.BadRequestError('User cannot be created')
 
-  const tokenUser = { userID: user._id, name: user.name, role: user.role }
+  const tokenUser = createTokenUser(user)
 
   attachCookiesToResponse({ res, tokenUser })
 
@@ -48,11 +48,7 @@ const login = async (req, res) => {
     throw new CustomAPIError.UnauthenticatedError('Invalid Credentials')
   }
 
-  const tokenUser = {
-    userID: user._id,
-    name: user.name,
-    role: user.role,
-  }
+  const tokenUser = createTokenUser(user)
 
   attachCookiesToResponse({ res, tokenUser })
 

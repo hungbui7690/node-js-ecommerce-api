@@ -18,10 +18,11 @@ router
   .route('/')
   .get(authenticateUser, authorizePermissions('admin'), getAllUsers)
 
-// (2) back to userController
 router.route('/showMe').get(authenticateUser, showCurrentUser)
 
-router.route('/updateUser').patch(updateUser)
+// (1) userController
+router.route('/updateUser').patch(authenticateUser, updateUser)
+
 router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword)
 
 router.route('/:id').get(authenticateUser, getSingleUser)
