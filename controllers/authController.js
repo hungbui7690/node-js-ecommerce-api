@@ -1,8 +1,7 @@
 const User = require('../models/User')
 const CustomAPIError = require('../errors/')
 const { StatusCodes } = require('http-status-codes')
-const jwt = require('jsonwebtoken')
-const { createToken } = require('../utils/')
+const { attachCookiesToResponse } = require('../utils/')
 
 const register = async (req, res) => {
   const { name, email, password } = req.body
@@ -23,13 +22,11 @@ const register = async (req, res) => {
   const user = await User.create({ ...req.body, role })
   if (!user) throw new CustomAPIError.BadRequestError('User cannot be created')
 
-  // (4)
   const tokenUser = { userID: user._id, username: user.name, role: user.role }
 
   // (5)
-  const token = createToken({ payload: tokenUser })
+  attachCookiesToResponse({ res, tokenUser })
 
-  // (6) end
   res.status(StatusCodes.CREATED).json({ tokenUser })
 }
 
