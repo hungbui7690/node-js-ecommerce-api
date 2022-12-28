@@ -1,5 +1,5 @@
 /*
-  create /middleware/authentication.js
+  create /errors/unauthorized.js
  */
 
 // =====================================================
@@ -39,7 +39,6 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/v1', (req, res) => {
-  console.log(req.signedCookies)
   res.send('/api/v1')
 })
 
