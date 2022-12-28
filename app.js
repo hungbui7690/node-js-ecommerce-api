@@ -1,5 +1,5 @@
 /*
-  userController.js
+  create /middleware/authentication.js
  */
 
 // =====================================================

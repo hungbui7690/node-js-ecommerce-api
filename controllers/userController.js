@@ -3,7 +3,6 @@ const CustomAPIError = require('../errors/')
 const { StatusCodes } = require('http-status-codes')
 const { attachCookiesToResponse } = require('../utils/')
 
-// (1)
 const getAllUsers = async (req, res) => {
   const users = await User.find({ role: 'user' })
     .sort('createdAt _id')
@@ -12,7 +11,6 @@ const getAllUsers = async (req, res) => {
   res.status(StatusCodes.OK).json({ users })
 }
 
-// (2)
 const getSingleUser = async (req, res) => {
   const { id } = req.params
 
