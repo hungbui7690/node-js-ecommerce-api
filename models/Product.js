@@ -58,11 +58,9 @@ const ProductSchema = new mongoose.Schema(
     },
   },
 
-  // (1)
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 )
 
-// (2) productController
 ProductSchema.virtual('review', {
   ref: 'Review',
   localField: '_id', // this is what id looks like in Product

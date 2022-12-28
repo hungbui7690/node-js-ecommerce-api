@@ -14,6 +14,8 @@ const {
   authorizePermissions,
 } = require('../middleware/authentication')
 
+const { getSingleProductReviews } = require('../controllers/reviewController')
+
 router
   .route('/')
   .get(getAllProducts)
@@ -26,5 +28,8 @@ router
   .get(getSingleProduct)
   .patch(authenticateUser, authorizePermissions('admin'), updateProduct)
   .delete(authenticateUser, authorizePermissions('admin'), deleteProduct)
+
+// (2)
+router.route('/:id/reviews').get(getSingleProductReviews)
 
 module.exports = router
