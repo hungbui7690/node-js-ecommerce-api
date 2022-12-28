@@ -9,11 +9,13 @@
 // packages
 require('dotenv').config()
 require('express-async-errors')
+const morgan = require('morgan')
 const express = require('express')
 const app = express()
 
 // local
 const connectDB = require('./db/connect')
+const authRouter = require('./routes/authRoutes')
 
 // middlewares
 const notFoundMiddleware = require('./middleware/not-found')
@@ -23,6 +25,7 @@ const errorHandlerMiddleware = require('./middleware/error-handler')
 // MIDDLEWARES & ROUTES
 // =====================================================
 
+app.use(morgan('tiny'))
 app.use(express.json())
 
 app.get('/', (req, res) => {
@@ -30,6 +33,8 @@ app.get('/', (req, res) => {
     Node JS - Ecommerce API
   `)
 })
+
+app.use('/api/v1/auth', authRouter)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
