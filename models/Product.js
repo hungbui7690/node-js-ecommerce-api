@@ -60,5 +60,4 @@ const ProductSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-// (1) create productController.js
 module.exports = mongoose.model('Product', ProductSchema)

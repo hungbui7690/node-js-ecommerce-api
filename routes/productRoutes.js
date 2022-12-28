@@ -13,7 +13,6 @@ const {
   authorizePermissions,
 } = require('../middleware/authentication')
 
-// (3) end
 router
   .route('/')
   .get(getAllProducts)

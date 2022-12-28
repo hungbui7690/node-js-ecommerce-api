@@ -1,27 +1,65 @@
+const Product = require('../models/Product')
+const { StatusCodes } = require('http-status-codes')
+const CustomAPIError = require('../errors/')
+
+// (1)
 const getAllProducts = async (req, res) => {
-  res.send('Get All Products')
+  const products = await Product.find({}).sort('createdAt _id')
+  res.status(StatusCodes.OK).json({ products })
 }
 
+// (2)
 const getSingleProduct = async (req, res) => {
-  res.send('Get Single Product')
+  const { id } = req.params
+
+  const product = await Product.findOne({ _id: id })
+
+  if (!product)
+    throw new CustomAPIError.NotFoundError(`No product with id ${id}`)
+
+  res.status(StatusCodes.OK).json({ product })
 }
 
+// (3)
 const createProduct = async (req, res) => {
-  res.send('Create Product')
+  req.body.user = req.user.userID
+
+  const product = await Product.create(req.body)
+
+  res.status(StatusCodes.CREATED).json({ product })
 }
 
+// (4)
 const updateProduct = async (req, res) => {
-  res.send('Update Product')
+  const { id } = req.params
+
+  const product = await Product.findOneAndUpdate({ _id: id }, req.body, {
+    new: true,
+    runValidators: true,
+  })
+
+  if (!product)
+    throw new CustomAPIError.NotFoundError(`No product with id ${id}`)
+
+  res.status(StatusCodes.OK).json({ product })
 }
 
+// (5)
 const deleteProduct = async (req, res) => {
-  res.send('Delete Product')
+  const { id } = req.params
+
+  const product = await Product.findONe({ _id: id })
+
+  if (!product)
+    throw new CustomAPIError.NotFoundError(`No product with id ${id}`)
+
+  res.status(StatusCodes.OK).json({ msg: 'Success! Product deleted' })
 }
+
 const uploadImage = async (req, res) => {
   res.send('Upload Image')
 }
 
-// (2) create productRoutes.js
 module.exports = {
   getAllProducts,
   getSingleProduct,
