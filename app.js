@@ -1,6 +1,5 @@
 /*
-  app.js
-  controller
+  model
  */
 
 // =====================================================
@@ -12,8 +11,6 @@ require('dotenv').config()
 require('express-async-errors')
 const morgan = require('morgan')
 const express = require('express')
-
-// (1)
 const cookieParser = require('cookie-parser')
 
 const app = express()
@@ -30,9 +27,7 @@ const errorHandlerMiddleware = require('./middleware/error-handler')
 // MIDDLEWARES & ROUTES
 // =====================================================
 
-// (2)
 app.use(cookieParser(process.env.JWT_SECRET))
-
 app.use(morgan('tiny'))
 app.use(express.json())
 
@@ -42,7 +37,6 @@ app.get('/', (req, res) => {
   `)
 })
 
-// (3) /utils/jwt.js
 app.get('/api/v1', (req, res) => {
   console.log(req.signedCookies)
   res.send('/api/v1')

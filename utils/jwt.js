@@ -13,7 +13,6 @@ const isTokenValid = ({ token }) => {
   return jwt.verify(token, process.env.JWT_SECRET)
 }
 
-// (4) controller
 const attachCookiesToResponse = ({ res, tokenUser }) => {
   const token = createToken({ payload: tokenUser })
 

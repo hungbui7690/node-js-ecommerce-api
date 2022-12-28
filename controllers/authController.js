@@ -22,20 +22,49 @@ const register = async (req, res) => {
   const user = await User.create({ ...req.body, role })
   if (!user) throw new CustomAPIError.BadRequestError('User cannot be created')
 
-  const tokenUser = { userID: user._id, username: user.name, role: user.role }
+  const tokenUser = { userID: user._id, name: user.name, role: user.role }
 
-  // (5)
   attachCookiesToResponse({ res, tokenUser })
 
   res.status(StatusCodes.CREATED).json({ tokenUser })
 }
 
-const login = (req, res) => {
-  res.send('Login')
+// (2)
+const login = async (req, res) => {
+  const { email, password } = req.body
+
+  if (!email || !password) {
+    throw new CustomAPIError.BadRequestError('Please provide all values')
+  }
+
+  const user = await User.findOne({ email })
+  if (!user) {
+    throw new CustomAPIError.UnauthenticatedError('Invalid Credentials')
+  }
+
+  const isPasswordCorrect = await user.comparePassword(password)
+
+  if (!isPasswordCorrect) {
+    throw new CustomAPIError.UnauthenticatedError('Invalid Credentials')
+  }
+
+  const tokenUser = {
+    userID: user._id,
+    name: user.name,
+    role: user.role,
+  }
+
+  attachCookiesToResponse({ res, tokenUser })
+
+  res.status(StatusCodes.OK).json({ user: tokenUser })
 }
 
 const logout = (req, res) => {
-  res.send('Logout')
+  res.cookie('token', 'logout', {
+    httpOnly: true,
+    expires: new Date(Date.now()),
+  })
+  res.status(StatusCodes.OK).json({ msg: 'User logged out!' })
 }
 
 module.exports = { register, login, logout }
