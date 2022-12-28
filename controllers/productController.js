@@ -49,26 +49,21 @@ const deleteProduct = async (req, res) => {
   if (!product)
     throw new CustomAPIError.NotFoundError(`No product with id ${id}`)
 
-  // fix here
   await product.remove()
 
   res.status(StatusCodes.OK).json({ msg: 'Success! Product deleted' })
 }
 
-// (3)
 const uploadImage = async (req, res) => {
-  // (a) check existance
   if (!req.files) {
     throw new CustomError.BadRequestError('No File Uploaded')
   }
 
-  // (b) check mimetype
   const productImage = req.files.image
   if (!productImage.mimetype.startsWith('image')) {
     throw new CustomError.BadRequestError('Not an image type ')
   }
 
-  // (c) check maxsize
   const maxsize = 1024 * 1024
   if (productImage.size > maxsize) {
     throw new CustomError.BadRequestError(
@@ -76,16 +71,13 @@ const uploadImage = async (req, res) => {
     )
   }
 
-  // (d) use path module + mv() to move image to /uploads folder
   const imagePath = path.join(
     __dirname,
     '../public/uploads/' + `${productImage.name}`
   )
 
-  // (e)
   await productImage.mv(imagePath)
 
-  // (f)
   res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` })
 }
 
