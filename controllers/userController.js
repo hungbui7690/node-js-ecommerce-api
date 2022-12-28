@@ -1,7 +1,11 @@
 const User = require('../models/User')
 const CustomAPIError = require('../errors/')
 const { StatusCodes } = require('http-status-codes')
-const { createTokenUser, attachCookiesToResponse } = require('../utils')
+const {
+  createTokenUser,
+  attachCookiesToResponse,
+  checkPermissions,
+} = require('../utils')
 
 const getAllUsers = async (req, res) => {
   const users = await User.find({ role: 'user' })
@@ -11,6 +15,7 @@ const getAllUsers = async (req, res) => {
   res.status(StatusCodes.OK).json({ users })
 }
 
+// (2)
 const getSingleUser = async (req, res) => {
   const { id } = req.params
 
@@ -19,6 +24,8 @@ const getSingleUser = async (req, res) => {
     throw new CustomAPIError.NotFoundError(`No user with id ${id}`)
   }
 
+  checkPermissions(req.user, id)
+
   res.status(StatusCodes.OK).json({ user })
 }
 
@@ -26,7 +33,6 @@ const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: req.user })
 }
 
-// (2)  use findOne() + save() to trigger pre-save
 const updateUser = async (req, res) => {
   const { email, name } = req.body
 
@@ -34,17 +40,14 @@ const updateUser = async (req, res) => {
     throw new CustomAPIError.BadRequestError('Please provide all values')
   }
 
-  // (a)
   const user = await User.findOne({ _id: req.user.userID })
 
   if (!user)
     throw new CustomAPIError.UnauthenticatedError('Invalid Credentials')
 
-  // (b)
   user.email = email
   user.name = name
 
-  // (c)
   await user.save()
 
   const tokenUser = createTokenUser(user)
