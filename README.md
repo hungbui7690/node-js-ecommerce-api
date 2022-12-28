@@ -1,1 +1,7 @@
-# node-js-ecommerce-api
+# Config:
+
+- create .env file
+
+```
+MONGO_URI= <connection_string>
+```
