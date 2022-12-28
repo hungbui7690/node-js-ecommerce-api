@@ -1,5 +1,5 @@
 /*
-  create /utils/checkPermission.js
+  product model
  */
 
 // =====================================================

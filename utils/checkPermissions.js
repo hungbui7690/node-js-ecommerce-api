@@ -11,5 +11,4 @@ const checkPermissions = (tokenPayload, userID) => {
   )
 }
 
-// (1) userController
 module.exports = { checkPermissions }

@@ -15,7 +15,6 @@ const getAllUsers = async (req, res) => {
   res.status(StatusCodes.OK).json({ users })
 }
 
-// (2)
 const getSingleUser = async (req, res) => {
   const { id } = req.params
 
