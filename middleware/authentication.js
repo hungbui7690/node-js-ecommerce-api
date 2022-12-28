@@ -18,7 +18,6 @@ const authenticateUser = async (req, res, next) => {
   next()
 }
 
-// (3)  userRoutes.js
 const authorizePermissions = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

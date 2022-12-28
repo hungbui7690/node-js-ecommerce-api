@@ -8,5 +8,4 @@ class UnauthorizedError extends CustomAPIError {
   }
 }
 
-// (1) index.js
 module.exports = UnauthorizedError

@@ -14,14 +14,15 @@ const {
   authorizePermissions,
 } = require('../middleware/authentication')
 
-// (4) end
 router
   .route('/')
   .get(authenticateUser, authorizePermissions('admin'), getAllUsers)
 
-router.route('/showMe').get(showCurrentUser)
+// (2) back to userController
+router.route('/showMe').get(authenticateUser, showCurrentUser)
+
 router.route('/updateUser').patch(updateUser)
-router.route('/updateUserPassword').patch(updateUserPassword)
+router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword)
 
 router.route('/:id').get(authenticateUser, getSingleUser)
 
