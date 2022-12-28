@@ -1,9 +1,27 @@
+const User = require('../models/User')
+const CustomAPIError = require('../errors/')
+const { StatusCodes } = require('http-status-codes')
+const { attachCookiesToResponse } = require('../utils/')
+
+// (1)
 const getAllUsers = async (req, res) => {
-  res.send('Get All Users')
+  const users = await User.find({ role: 'user' })
+    .sort('createdAt _id')
+    .select('-password')
+
+  res.status(StatusCodes.OK).json({ users })
 }
 
+// (2)
 const getSingleUser = async (req, res) => {
-  res.send('Get User')
+  const { id } = req.params
+
+  const user = await User.findOne({ _id: id }).select('-password')
+  if (!user) {
+    throw new CustomAPIError.NotFoundError(`No user with id ${id}`)
+  }
+
+  res.status(StatusCodes.OK).json({ user })
 }
 
 const showCurrentUser = async (req, res) => {
