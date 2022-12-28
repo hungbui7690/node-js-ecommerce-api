@@ -27,8 +27,17 @@ const createReview = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ review })
 }
 
+// here
 const GetAllReviews = async (req, res) => {
   const reviews = await Review.find({})
+    .populate({
+      path: 'product',
+      select: 'name company price',
+    })
+    .populate({
+      path: 'user',
+      select: 'name',
+    })
   res.status(StatusCodes.OK).json({ reviews, count: reviews.length })
 }
 
@@ -43,7 +52,6 @@ const getSingleReview = async (req, res) => {
   res.status(StatusCodes.OK).json({ review })
 }
 
-// (2)
 const updateReview = async (req, res) => {
   const { id } = req.params
 
@@ -64,7 +72,6 @@ const updateReview = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: `Success! Review updated.` })
 }
 
-// (1)
 const deleteReview = async (req, res) => {
   const { id } = req.params
 
