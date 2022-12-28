@@ -63,10 +63,15 @@ const ProductSchema = new mongoose.Schema(
 
 ProductSchema.virtual('review', {
   ref: 'Review',
-  localField: '_id', // this is what id looks like in Product
-  foreignField: 'product', // in review
-  justOne: false, // since we want to get the list
-  match: { rating: 5 }, // filter
+  localField: '_id',
+  foreignField: 'product',
+  justOne: false,
+  match: { rating: 5 },
+})
+
+// (3)
+ProductSchema.pre('remove', async function () {
+  await this.model('Review').deleteMany({ product: this._id })
 })
 
 module.exports = mongoose.model('Product', ProductSchema)

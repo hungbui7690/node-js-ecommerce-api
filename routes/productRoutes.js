@@ -29,7 +29,7 @@ router
   .patch(authenticateUser, authorizePermissions('admin'), updateProduct)
   .delete(authenticateUser, authorizePermissions('admin'), deleteProduct)
 
-// (2)
+// (2) product model
 router.route('/:id/reviews').get(getSingleProductReviews)
 
 module.exports = router
